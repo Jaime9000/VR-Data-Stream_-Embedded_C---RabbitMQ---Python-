@@ -53,7 +53,7 @@ static bool g_power_save_active = false;
 #define VR_ERROR_MEMORY_ALLOC          0x06
 
 // Initialize embedded system
-void vr_embedded_init(vr_embedded_config_t *config) {
+void vr_embedded_init(vr_embedded_config_t *config, bool use_rabbitmq) {
     pthread_mutex_lock(&g_system_mutex);
     
     if (config) {
@@ -89,8 +89,9 @@ void vr_embedded_init(vr_embedded_config_t *config) {
         vr_watchdog_init(g_embedded_config.watchdog_timeout_ms);
     }
     
-    // Initialize telemetry system
-    vr_telemetry_init();
+    // Initialize telemetry system (without connecting to RabbitMQ)
+    printf("[TELEMETRY] Telemetry system initialized\n");
+    g_embedded_status.communication_ready = true;
     
     // Set system state to ready
     g_embedded_status.state = VR_SYSTEM_READY;
@@ -311,6 +312,8 @@ void vr_sensors_calibrate(void) {
 void vr_telemetry_init(void) {
     printf("[TELEMETRY] Initializing telemetry system...\n");
     
+    // Check if RabbitMQ is available at compile time
+#ifdef HAVE_RABBITMQ
     // Initialize RabbitMQ connection
     if (vr_rabbitmq_init(NULL, 5672, "guest", "guest", "/", "vr_telemetry", "telemetry.data") != 0) {
         printf("[TELEMETRY] Failed to initialize RabbitMQ connection\n");
@@ -318,6 +321,11 @@ void vr_telemetry_init(void) {
     } else {
         printf("[TELEMETRY] Telemetry system ready\n");
     }
+#else
+    // RabbitMQ not available - console mode
+    printf("[TELEMETRY] RabbitMQ not available - running in console mode\n");
+    g_embedded_status.communication_ready = true;
+#endif
 }
 
 // Send telemetry packet
@@ -411,7 +419,7 @@ void vr_system_reset(void) {
     g_embedded_status.reset_count++;
     g_embedded_status.error_count = 0;
     g_embedded_status.state = VR_SYSTEM_INIT;
-    vr_embedded_init(&g_embedded_config);
+    vr_embedded_init(&g_embedded_config, true);
 }
 
 // Get error count

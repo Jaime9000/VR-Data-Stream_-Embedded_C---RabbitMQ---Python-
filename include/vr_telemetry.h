@@ -97,7 +97,7 @@ typedef struct {
 } vr_embedded_status_t;
 
 // Function prototypes - Embedded System Core
-void vr_embedded_init(vr_embedded_config_t *config);
+void vr_embedded_init(vr_embedded_config_t *config, bool use_rabbitmq);
 void vr_embedded_main_loop(void);
 void vr_embedded_system_tick(void);
 vr_system_state_t vr_embedded_get_state(void);
