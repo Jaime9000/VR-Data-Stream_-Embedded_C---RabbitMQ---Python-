@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#define _GNU_SOURCE
 #include "vr_telemetry.h"
 #include <math.h>
 #include <stdlib.h>
@@ -6,6 +8,19 @@
 #include <sys/time.h>
 #include <signal.h>
 #include <pthread.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+// Ensure math functions are available
+#ifndef fmaxf
+#define fmaxf(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef fminf
+#define fminf(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 // Embedded System State
 static vr_embedded_config_t g_embedded_config;

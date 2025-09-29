@@ -1,6 +1,6 @@
 # VR Telemetry Simulation Makefile
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -O2 -g
+CFLAGS = -Wall -Wextra -std=c99 -O2 -g -D_GNU_SOURCE -D_USE_MATH_DEFINES
 INCLUDES = -Iinclude
 LDFLAGS = -lrabbitmq -lm -lpthread -lrt
 

@@ -42,6 +42,43 @@ void print_usage(const char *program_name) {
     printf("  %s -n --power-save                     # Console output with power saving\n", program_name);
 }
 
+// Parse simulation type
+void parse_simulation_type(const char *type, vr_simulation_config_t *config) {
+    if (strcmp(type, "intense") == 0) {
+        config->movement_speed = 2.0f;
+        config->rotation_speed = 1.0f;
+        config->noise_level = 0.02f;
+        config->blink_frequency = 30.0f;
+        config->gaze_speed = 3.0f;
+        config->hand_movement_speed = 2.5f;
+        config->base_cpu_usage = 70.0f;
+        config->base_gpu_usage = 85.0f;
+        config->base_temperature = 45.0f;
+        config->battery_drain_rate = 5;
+    } else if (strcmp(type, "calm") == 0) {
+        config->movement_speed = 0.3f;
+        config->rotation_speed = 0.1f;
+        config->noise_level = 0.005f;
+        config->blink_frequency = 15.0f;
+        config->gaze_speed = 1.0f;
+        config->hand_movement_speed = 0.8f;
+        config->base_cpu_usage = 25.0f;
+        config->base_gpu_usage = 35.0f;
+        config->base_temperature = 30.0f;
+        config->battery_drain_rate = 1;
+    } else { // normal
+        config->movement_speed = 1.0f;
+        config->rotation_speed = 0.5f;
+        config->noise_level = 0.01f;
+        config->blink_frequency = 20.0f;
+        config->gaze_speed = 2.0f;
+        config->hand_movement_speed = 1.5f;
+        config->base_cpu_usage = 45.0f;
+        config->base_gpu_usage = 60.0f;
+        config->base_temperature = 35.0f;
+        config->battery_drain_rate = 2;
+    }
+}
 
 int main(int argc, char *argv[]) {
     // Default embedded configuration
